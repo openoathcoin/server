@@ -1,1 +1,1 @@
-# ocserver
+# Open Oath Coin Server
