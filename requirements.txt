@@ -2,5 +2,6 @@
 
 jupyterlab
 numpy
-Flask
+taipy
+# Flask
 waitress
