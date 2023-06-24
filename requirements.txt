@@ -1,7 +1,5 @@
-# to install required packages run pip install -r requirements.txt
-
+# run source env/bin/activate to activate virtual environment
+# run pip install -r requirements.txt to install required packages in virtual environment
 jupyterlab
-numpy
 taipy
-# Flask
-# waitress
+PyGithub
