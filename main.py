@@ -5,7 +5,7 @@
   # set production server to listen at localhost:5000, localhost:8000 won't work
 
 import taipy as tp
-from utils.pages import main_page_title, main_page, login_page
+from utils.pages import main_page_title, login_page, root_page
 
 
 # flask_app = Flask(__name__)
@@ -29,7 +29,7 @@ from utils.pages import main_page_title, main_page, login_page
 
 # gui = tp.Gui(page="# Taipy application", flask=flask_app)
 
-pages = {"/":main_page,
+pages = {"/":root_page,
          "login":login_page}
 
 gui = tp.Gui(pages=pages)
