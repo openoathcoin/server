@@ -1,4 +1,5 @@
 from taipy.gui import Markdown, navigate
+from datetime import datime
 
 root_page = Markdown("""
 <|layout|columns=1fr auto 1fr|class_name=container align_columns_center|
@@ -12,9 +13,7 @@ root_page = Markdown("""
 <|content|>
 
 <center>
-<font size="4">[One More Coin](/)</font>  
-Always open and free  
-[About]()  [Documentation]()  [Contact]()  [MIT License]()
+<|{datetime.now().year}|text|> © [One More Coin](/) | [About]() | [Contact]() | [Documentation]() | [MIT License]()
 </center>
 """)
 
