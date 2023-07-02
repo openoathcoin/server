@@ -43,7 +43,7 @@ if __name__ == "__main__":
   # for development
   # run source env/bin/activate to activate virtual environment
   # run python main.py in virtual environment
-  tp.run(gui, host="localhost", port=8000, title=title, favicon=logo_file, watermark="")  # default host:port 127.0.0.1:5000
+  tp.run(gui, host="localhost", port=8000, title=title, favicon=logo_file, watermark="", debug=True, use_reloader=True)  # default host:port 127.0.0.1:5000
 else:
   # for production
   # run source env/bin/activate to activate virtual environment
