@@ -15,7 +15,7 @@ root_page = Markdown("""
 <|content|>
 
 <center>
-<|{year}|text|> © [One More Coin](/) | [About]() | [Contact]() | [Documentation]() | [MIT License]()
+<|{year}|text|> [One More Coin](/) | [About]() | [Contact]() | [Documentation]() | [MIT License]()
 </center>
 """)
 
