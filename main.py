@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
-# notes:
-  # don't name main script __main__.py or gunicorn won't find app in __main__
-  # set production server to listen at localhost:5000, localhost:8000 won't work
+# note: don't name main script __main__.py or gunicorn won't find app in __main__
 
 import taipy as tp
 from utils.pages.root_page import root_page
