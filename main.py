@@ -31,6 +31,9 @@ from utils.pages.pay_page import pay_page
 title = "One More Coin: A currency based on trust and transparency"  # text displayed on browser tab
 logo_file = "images/logo.jpg"  # icon displayed on browser tab
 
+# global bound variables for pages
+orgname = "onemorecoin"
+
 pages = {"/": root_page,
          "account": account_page,
          "pay": pay_page}
