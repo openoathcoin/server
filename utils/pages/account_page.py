@@ -1,16 +1,28 @@
 from taipy.gui import Markdown
+import pandas as pd
+from urllib.error import HTTPError
 
 account_page = Markdown("""
-<|part|render={show_login}|
+<|part|
 <center>
-<|{password}|input|password=True|label=Access token|><br/><br/>
-<|Log in to GitHub account|button|class_name=plain|><br/>
-or<br/>
-[CREATE GITHUB ACCOUNT](https://github.com/signup?source=login)
+<|{username}|input|label=Username|on_action=handle_press_enter|><br/><br/>
+<|View account|button|class_name=plain|on_action=handle_view_account_click|><br/><br/>
 </center>
+|>
+
+<|part|
+<|{transact_data}|table|date_format=yyyy-MM-dd HH:mm:ss|rebuild|>
 |>
 """)
 
-show_login = True
 username = ""
-password = ""
+transact_data = pd.DataFrame()
+
+def handle_view_account_click(state, id, action, payload):
+  url = f"https://raw.githubusercontent.com/{state.orgname}/{state.username}/main/transmits.csv"
+  try:
+    state.transact_data = pd.read_csv(url, parse_dates=["datetime"], comment="#")
+  except HTTPError as e:
+    state.transact_data = pd.DataFrame()
+
+handle_press_enter = handle_view_account_click
