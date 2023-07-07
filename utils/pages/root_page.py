@@ -10,14 +10,16 @@ root_page = Markdown("""
 <|{orgname}|input|label=Currency|>
 |>
 
-<|part|class_name=mb2|
+<|part|class_name=mb3|
 <|content|>
 |>
 
+<|part|class_name=text-small|
 <center>
 [Docs]()&emsp;[About]()&emsp;[Support]()&emsp;[Terms]()&emsp;[Privacy]()<br/>
-<|© {year} One More Coin|text|>
+<|© {year} One More Coin|text|class_name=text-small|>
 </center>
+|>
 """)
 
 year = datetime.now().year
