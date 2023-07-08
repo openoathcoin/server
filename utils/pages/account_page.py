@@ -2,6 +2,12 @@ from taipy.gui import Markdown
 import pandas as pd
 from urllib.error import HTTPError
 
+username = ""
+nodata_msg = ""
+columns = ["datetime", "froto", "coins", "description"]  # columns to display
+transact_data = pd.DataFrame(columns=columns)
+balance = credit = debt = pd.NA
+
 account_page = Markdown("""
 <|part|
 <center>
@@ -17,16 +23,11 @@ account_page = Markdown("""
 |>
 """)
 
-username = ""
-nodata_msg = ""
-columns = ["datetime", "froto", "coins", "description"]  # columns to display
-transact_data = pd.DataFrame(columns=columns)
-balance = credit = debt = pd.NA
-
 def handle_view_account_click(state, id, action, payload):
   url = f"https://raw.githubusercontent.com/{state.orgname}/{state.username}/main/transmits.csv"
   try:
-    state.transact_data = pd.read_csv(url, parse_dates=["datetime"], comment="#")
+    state.transact_data = pd.read_csv(url, comment="#")
+    # state.transact_data = pd.read_csv(url, parse_dates=["datetime"], comment="#")
   except HTTPError as e:
     if state.username:
       state.nodata_msg = "No data found for user in given currency"
