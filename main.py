@@ -32,7 +32,7 @@ title = "One More Coin: A currency based on trust and transparency"  # text disp
 logo_file = "images/logo.jpg"  # icon displayed on browser tab
 
 # global bound variables shared by pages
-orgname = "onemorecoin"
+orgname = "onemorecoin"  # currency
 
 pages = {"/": root_page,
          "account": account_page,
