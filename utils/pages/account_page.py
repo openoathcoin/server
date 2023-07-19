@@ -15,11 +15,12 @@ account_page = Markdown("""
 </center>
 |>
 
-<|part|
 <|part|class_name=mb1|
-<|Balance: {balance}|text|>&emsp;
-<|Credit: {credit}|text|>&emsp;
-<|Debt: {debt}|text|>
+<|layout|columns=auto 1|class_name=mb1 pt-half|
+<|https://avatars.githubusercontent.com/u/108220667?v=4|image|width=45px|hover_text=Open Oath Coin|>
+
+<|Name: {name}|text|>&emsp;<|Membership: {role}|text|><br/>
+<|Balance: {balance}|text|>&emsp;<|Credit: {credit}|text|>&emsp;<|Debt: {debt}|text|>
 |>
 
 <|part|
@@ -30,6 +31,8 @@ account_page = Markdown("""
 """)
 
 username = ""
+name = ""
+role = ""
 tz = timezones[0][0]
 # show_balance = False
 columns = ["Datetime", "Froto", "Coins", "Description"]  # columns to display
@@ -42,7 +45,7 @@ def handle_view_account_click(state, id, action, payload):
   with state as s:
     try:
       transact_data = pd.read_csv(url, parse_dates=["Datetime"], comment="#")
-      transact_data["Datetime"] = transact_data["Datetime"].dt.tz_convert(s.tz)
+      transact_data["Datetime"] = transact_data["Datetime"].dt.tz_convert(s.tz)  # transaction data not empty if url exist
       s.transact_data = transact_data
     except HTTPError as e:
       if s.username and s.orgname:
@@ -63,8 +66,11 @@ def handle_view_account_click(state, id, action, payload):
 handle_username_keypress_enter = handle_view_account_click
 
 def handle_tz_change(state, varname, value):
-  # update datetime to new timezone
   transact_data = state.transact_data
+  
+  # update datetime to new timezone
+  if transact_data["Datetime"].empty:
+    return
   transact_data["Datetime"] = transact_data["Datetime"].dt.tz_convert(state.tz)  # direct update on state.transact_data["Datetime"] not work
   state.transact_data = transact_data
 
