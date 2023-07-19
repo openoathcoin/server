@@ -21,11 +21,7 @@ def handle_auth_code():
   get authorization code from github callback and store authenticated user in session
   """
 
-  code = request.args.get("code")
-  gh_app = Github().get_oauth_application(os.environ["CLIENT_ID"], os.environ["CLIENT_SECRET"])
-  token = gh_app.get_access_token(code)
-  auth = gh_app.get_app_user_auth(token)
-  session["gh"] = Github(auth=auth)  # authenticated user
+  session["code"] = request.args.get("code")
 
   return redirect("/account")
 
@@ -39,10 +35,14 @@ pages = {"/": root_page,
          "pay": pay_page}
 
 def on_navigate(state, pagename):
-  if pagename == "account" and not state.is_authed and "gh" in session:
-    state.gh = session["gh"]
+  if pagename == "account" and not state.is_authed and "code" in session:
+    gh_app = Github().get_oauth_application(os.environ["CLIENT_ID"], os.environ["CLIENT_SECRET"])
+    token = gh_app.get_access_token(session["code"])
+    auth = gh_app.get_app_user_auth(token)
+    state.gh = Github(auth=auth)  # authenticated user
     state.is_authed = True
-    session.pop("gh")  # delete authenticated user in session
+    
+    session.pop("code")  # delete authorization code
   
   return pagename
 
