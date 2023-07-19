@@ -1,11 +1,17 @@
-from taipy.gui import Markdown, navigate
+import os
+
+from taipy.gui import Markdown, Icon, navigate
 from datetime import datetime
 
 root_page = Markdown("""
-<|layout|columns=auto 1 auto|class_name=mb2|
-<|images/logo.jpg|image|width=40px|hover_text=Open Oath Coin|on_action=handle_logo_click|>
+<|layout|columns=auto 1 auto auto|class_name=align-columns-bottom mb2|
+<|{Icon(os.environ["LOGO_FILE"])}|button|on_action=handle_logo_click|>
 
-<|navbar|lov={[("/account", "Account"), ("/pay", "Pay")]}|class_name=fullheight|>
+<|navbar|lov={[("/account", "Account"), ("/pay", "Pay")]}|>
+
+<center>
+<|{"Authorize" if not is_authed else gh.get_user().login}|button|class_name={"" if not is_authed else "success"}|hover_text={"" if not is_authed else "Revoke access"}|on_action=handle_authorize_click|>
+</center>
 
 <center>
 <|{orgname}|input|label=Currency|>
@@ -18,13 +24,22 @@ root_page = Markdown("""
 
 <|part|class_name=text-small|
 <center>
-[Docs]()&emsp;[About]()&emsp;[Support]()&emsp;[Terms]()&emsp;[Privacy]()<br/>
-<|© {year} Open Oath Coin|text|class_name=text-small|>
+[Docs]()&emsp;
+[About]()&emsp;
+[Support]()&emsp;
+[Terms]()&emsp;
+[Privacy]()<br/>
+<|© {datetime.now().year} {os.environ['APPNAME']}|text|class_name=text-small|>
 </center>
 |>
 """)
 
-year = datetime.now().year
-
 def handle_logo_click(state, id, action):
   navigate(state)
+
+def handle_authorize_click(state, id, action):
+  if not state.is_authed:
+    url = f"https://github.com/login/oauth/authorize?client_id={os.environ['CLIENT_ID']}&state={os.environ['STATE']}"
+    navigate(state, to=url, tab="_self")
+  else:
+    pass
