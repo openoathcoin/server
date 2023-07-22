@@ -34,27 +34,28 @@ pages = {"/": root_page,
          "account": account_page,
          "pay": pay_page}
 
-# def on_navigate(state, pagename):
-#   if pagename == "account" and not state.is_authed and "code" in session:
-#     gh_app = Github().get_oauth_application(os.environ["CLIENT_ID"], os.environ["CLIENT_SECRET"])
-#     token = gh_app.get_access_token(session["code"])
-#     auth = gh_app.get_app_user_auth(token)
-#     state.gh = Github(auth=auth)  # authenticated user
-#     state.is_authed = True
-    
-#     session.pop("code")  # delete authorization code
-  
-#   return pagename
-
-def on_init(state):
-  if "code" in session:
+def on_navigate(state, pagename):
+  # authenticate user with authorization code
+  if pagename == "account" and not state.is_authed and "code" in session:
     gh_app = Github().get_oauth_application(os.environ["CLIENT_ID"], os.environ["CLIENT_SECRET"])
     token = gh_app.get_access_token(session["code"])
     auth = gh_app.get_app_user_auth(token)
     state.gh = Github(auth=auth)  # authenticated user
     state.is_authed = True
-
+    
     session.pop("code")  # delete authorization code
+  
+  return pagename
+
+# def on_init(state):
+#   if "code" in session:
+#     gh_app = Github().get_oauth_application(os.environ["CLIENT_ID"], os.environ["CLIENT_SECRET"])
+#     token = gh_app.get_access_token(session["code"])
+#     auth = gh_app.get_app_user_auth(token)
+#     state.gh = Github(auth=auth)  # authenticated user
+#     state.is_authed = True
+
+#     session.pop("code")  # delete authorization code
 
 gui = tp.Gui(pages=pages, flask=flask_app)
 
