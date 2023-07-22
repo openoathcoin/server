@@ -2,9 +2,8 @@
 # run pip install -r requirements.txt to install required packages in virtual environment
 
 jupyterlab
-PyGithub
 taipy
+PyGithub
 gunicorn
 # uwsgi
 # pyuwsgi
-gevent
