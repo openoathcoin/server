@@ -69,7 +69,8 @@ if __name__ == "__main__":
 else:
   # for production
   # run source env/bin/activate to activate virtual environment
-  # run gunicorn --bind localhost:8000 --worker-class gevent --worker-connections 1000 --workers $(nproc) --threads 1 main:app in virtual environment, adjust nproc and threads when more memory available
-  # run uwsgi --http localhost:8000 --http-websockets --master --gevent 1000 --processes $(nproc) --threads 1 --module main:app in virtual environment, adjust nproc and threads when more memory available
+  # run gunicorn --bind localhost:8000 --worker-class geventwebsocket.gunicorn.workers.GeventWebSocketWorker --worker-connections 1000 --workers $(nproc) --threads 1 main:app in virtual environment, adjust nproc and threads when more cpus and memory available
+  # run gunicorn --bind localhost:8000 --worker-class gevent --worker-connections 1000 --workers $(nproc) --threads 1 main:app in virtual environment, adjust nproc and threads when more cpus and memory available
+  # run uwsgi --http localhost:8000 --http-websockets --master --gevent 1000 --processes $(nproc) --threads 1 --module main:app in virtual environment, adjust nproc and threads when more cpus and memory available
 
   app = tp.run(gui, host="localhost", port=8000, title=os.environ["TITLE"], favicon=os.environ["LOGO_FILE"], watermark="", run_server=False)
