@@ -11,7 +11,7 @@ root_page = Markdown("""
 <|navbar|lov={[("/account", "Account"), ("/pay", "Pay")]}|>
 
 <center>
-<|{"Authorize" if not is_authed else gh.get_user().login}|button|class_name={"" if not is_authed else "success"}|hover_text={"" if not is_authed else "Revoke access"}|on_action=handle_authorize_click|>
+<|{"Authorize" if not gh._Github__requester.auth else gh.get_user().login}|button|class_name={"" if not gh._Github__requester.auth else "success"}|hover_text={"" if not gh._Github__requester.auth else "Revoke"}|on_action=handle_authorize_click|>
 </center>
 
 <center>
@@ -39,11 +39,10 @@ def handle_logo_click(state, id, action):
   navigate(state)
 
 def handle_authorize_click(state, id, action):
-  if not state.is_authed:
-    # authenticate user
+  if not state.gh._Github__requester.auth:
+    # authenticate
     url = f"https://github.com/login/oauth/authorize?client_id={os.environ['CLIENT_ID']}&state={os.environ['STATE']}"
     navigate(state, to=url, tab="_self")
   else:
-    # revoke access
+    # revoke
     state.gh = Github()
-    state.is_authed = False
