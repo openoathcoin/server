@@ -28,24 +28,22 @@ def handle_auth_code():
 
 # bound variables shared by pages
 orgname = os.environ["ORGNAME"]  # currency
-gh = Github()  # unauthenticated user
-is_authed = False  # user authenticated or not
+gh = Github()  # unauthenticated
 
 pages = {"/": root_page,
          "account": account_page,
          "pay": pay_page}
 
 def on_navigate(state, pagename):
-  # authenticate user with authorization code
-  if pagename == "account" and not state.is_authed and "code" in session and "state" in session and session["state"] == os.environ["STATE"]:
+  # authenticate with authorization code
+  if pagename == "account" and not state.gh._Github__requester.auth and "code" in session and "state" in session and session["state"] == os.environ["STATE"]:
     gh_app = Github().get_oauth_application(os.environ["CLIENT_ID"], os.environ["CLIENT_SECRET"])
     token = gh_app.get_access_token(session["code"])
     auth = gh_app.get_app_user_auth(token)
-    state.gh = Github(auth=auth)  # authenticated user
-    state.is_authed = True
+    state.gh = Github(auth=auth)  # authenticated
     
     session.pop("code")  # delete authorization code
-    session.pop("state")  # delete state
+    session.pop("state")
   
   return pagename
 
@@ -66,7 +64,7 @@ if __name__ == "__main__":
   # run source env/bin/activate to activate virtual environment
   # run python main.py in virtual environment
 
-  tp.run(gui, host="localhost", port=8000, title=os.environ["TITLE"], favicon=os.environ["LOGO_FILE"], watermark="", debug=True, use_reloader=True, flask_log=True)  # default host:port 127.0.0.1:5000
+  tp.run(gui, host="localhost", port=8000, title=os.environ["TITLE"], favicon=os.environ["LOGO_FILE"], watermark="", debug=True, use_reloader=True)  # default host:port 127.0.0.1:5000
   # tp.run(gui, host="localhost", port=8000, title=os.environ["TITLE"], favicon=os.environ["LOGO_FILE"], watermark="")  # run in notebook
 else:
   # for production
