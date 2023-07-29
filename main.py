@@ -43,7 +43,7 @@ org = None  # selected currency
 username = ""
 user = None
 transact_data = None
-msg = ""
+msg = ""  # view account message
 
 def on_navigate(state, pagename):
   if pagename == "account" and not state.gh._Github__requester.auth and "code" in session and "state" in session and session["state"] == os.environ["STATE"]:
