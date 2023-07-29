@@ -11,12 +11,14 @@ root_page = Markdown("""
 <|navbar|lov={[("/account", "Account"), ("/pay", "Pay")]}|>
 
 <center>
-<|{"Authorize" if not gh._Github__requester.auth else gh.get_user().login}|button|class_name={"" if not gh._Github__requester.auth else "success"}|hover_text={"" if not gh._Github__requester.auth else "Revoke"}|on_action=handle_authorize_click|>
+<|{"Authorize" if not gh._Github__requester.auth else gh.get_user().login}|button|class_name={"" if not gh._Github__requester.auth else "success"}|hover_text={"" if not gh._Github__requester.auth else "Revoke access"}|on_action=handle_authorize_click|>
 </center>
 
+<|part|render={gh._Github__requester.auth}|
 <center>
-<|{orgname}|input|label=Currency|>
+<|{org}|selector|lov={orgs}|type=Organization|adapter={lambda o: (o.login, Icon(o.avatar_url, o.login))}|dropdown|label=Currency|>
 </center>
+|>
 |>
 
 <|part|class_name=mb2|
@@ -35,14 +37,18 @@ root_page = Markdown("""
 |>
 """)
 
-def handle_logo_click(state, id, action):
-  navigate(state)
-
 def handle_authorize_click(state, id, action):
   if not state.gh._Github__requester.auth:
-    # authenticate
+    # authorize
     url = f"https://github.com/login/oauth/authorize?client_id={os.environ['CLIENT_ID']}&state={os.environ['STATE']}"
     navigate(state, to=url, tab="_self")
   else:
-    # revoke
-    state.gh = Github()
+    # revoke access
+    with state as s:
+      s.gh = Github()
+      s.orgs = []
+      s.org = None
+      s.username = ""
+      s.user = None
+      s.transact_data = None
+      s.msg = ""
