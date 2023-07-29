@@ -17,7 +17,7 @@ account_page = Markdown("""
 
 <|part|render={user}|class_name=mb1|
 <center>
-<|{user.avatar_url if user else ""}|image|width=50px|label=Avatar|hover_text=Pay {user.login if user else ''}|on_action=handle_avatar_click|><br/>
+<|{user.avatar_url if user else ""}|image|width=45px|label=Avatar|hover_text=Pay {user.login if user else ''}|on_action=handle_avatar_click|><br/>
 <|{user.name if user and user.name else ""}|text|>
 </center>
 |>
