@@ -39,9 +39,7 @@ root_page = Markdown("""
 
 def handle_authorize_click(state, id, action):
   if not state.gh._Github__requester.auth:
-    # authorize
-    url = f"https://github.com/login/oauth/authorize?client_id={os.environ['CLIENT_ID']}&state={os.environ['STATE']}"
-    navigate(state, to=url, tab="_self")
+    navigate(state, to="/authorize", tab="_self")
   else:
     # revoke access
     with state as s:
