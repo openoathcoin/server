@@ -4,6 +4,7 @@
 
 import os
 from operator import attrgetter
+from secrets import token_urlsafe
 from io import BytesIO
 
 import taipy as tp
@@ -19,14 +20,27 @@ from utils.pages.pay_page import pay_page
 flask_app = Flask(__name__)
 flask_app.secret_key = os.environ["SECRET_KEY"]
 
+@flask_app.route("/authorize")
+def authorize():
+  """
+  redirect to github for authorization
+  """
+  
+  session["state"] = token_urlsafe(16)
+  url = f"https://github.com/login/oauth/authorize?client_id={os.environ['CLIENT_ID']}&state={session['state']}"
+  
+  return redirect(url)
+
 @flask_app.route("/handle-auth-code")
 def handle_auth_code():
   """
   get and store authorization code from github callback
   """
-
+  
+  assert request.args["state"] == session["state"]
+  session.pop("state")
+  
   session["code"] = request.args["code"]
-  session["state"] = request.args["state"]
 
   return redirect("/account")
 
@@ -46,16 +60,14 @@ transact_data = None
 msg = ""  # view account message
 
 def on_navigate(state, pagename):
-  if pagename == "account" and not state.gh._Github__requester.auth and "code" in session and "state" in session and session["state"] == os.environ["STATE"]:
+  if pagename == "account" and not state.gh._Github__requester.auth and "code" in session:
     # authenticate with authorization code
     gh_app = Github().get_oauth_application(os.environ["CLIENT_ID"], os.environ["CLIENT_SECRET"])
     token = gh_app.get_access_token(session["code"])
+    session.pop("code")  # delete authorization code
     auth = gh_app.get_app_user_auth(token)
     with state as s:
       s.gh = Github(auth=auth)  # authenticated
-      session.pop("code")  # delete authorization code
-      session.pop("state")
-
       s.orgs = sorted(s.gh.get_user().get_orgs(), key=attrgetter("login"))
       s.org = s.orgs[0] if s.orgs else None
       s.username = s.gh.get_user().login
